@@ -16,7 +16,7 @@ type Obfuscator struct {
 
 func NewObfuscator(code string) Obfuscator {
 	return Obfuscator{
-		code:     cleanJs(code),
+		code:     code,
 		mask:     getMask(),
 		interval: randomRange(1, 50),
 		option:   randomRange(2, 8),
@@ -49,9 +49,6 @@ func (o Obfuscator) encodeIt() string {
 }
 
 func cleanJs(code string) string {
-	pattern := regexp.MustCompile(`/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?:^\:|\\\|\')\/\/.*))/`)
-	code = pattern.ReplaceAllString(code, "")
-
 	searchPatterns := []*regexp.Regexp{
 		regexp.MustCompile(`/\>[^\S ]+/s`),
 		regexp.MustCompile(`/[^\S ]+\</s`),
