@@ -31,16 +31,14 @@ func (o Obfuscator) Obfuscate() string {
 }
 
 func (o Obfuscator) hashIt(str string) string {
-	for i, v := range o.mask {
-		str = strings.Replace(str, fmt.Sprint(i), string(v), -1)
+	for i, c := range o.mask {
+		str = strings.Replace(str, fmt.Sprint(i), string(c), -1)
 	}
 	return str
 }
 
 func (o Obfuscator) encodeIt() string {
 	str := ""
-
-	fmt.Println(o.option)
 
 	for _, c := range o.code {
 		parsed := strconv.FormatInt(int64(c)+int64(o.interval), o.option)
@@ -54,8 +52,17 @@ func cleanJs(code string) string {
 	pattern := regexp.MustCompile(`/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?:^\:|\\\|\')\/\/.*))/`)
 	code = pattern.ReplaceAllString(code, "")
 
-	searchPatterns := []*regexp.Regexp{regexp.MustCompile(`/\>[^\S ]+/s`), regexp.MustCompile(`/[^\S ]+\</s`), regexp.MustCompile(`/(\s)+/s`), regexp.MustCompile(`/<!--(.|\s)*?-->/`)}
-	replacePatterns := []string{`>`, `<`, `\\1`, ``}
+	searchPatterns := []*regexp.Regexp{
+		regexp.MustCompile(`/\>[^\S ]+/s`),
+		regexp.MustCompile(`/[^\S ]+\</s`),
+		regexp.MustCompile(`/(\s)+/s`),
+		regexp.MustCompile(`/<!--(.|\s)*?-->/`)}
+
+	replacePatterns := []string{
+		`>`,
+		`<`,
+		`\\1`,
+		``}
 
 	for i, sp := range searchPatterns {
 		code = sp.ReplaceAllString(code, replacePatterns[i])
